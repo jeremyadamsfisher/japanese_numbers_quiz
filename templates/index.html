@@ -19,7 +19,7 @@
             </div>
 
             <!-- Form for submitting the answer -->
-            <form action="/submit_answer" method="post" class="w-full max-w-xs flex flex-col items-center">
+            <form action="/" method="post" class="w-full max-w-xs flex flex-col items-center">
                 <input type="text" name="user_answer" placeholder="Enter your answer (e.g., 123)" class="input input-bordered input-lg w-full mb-4 text-center text-xl" required autofocus />
                 <!-- Hidden input to send the correct answer back to the server -->
                 <input type="hidden" name="correct_number" value="{{ question_number }}">

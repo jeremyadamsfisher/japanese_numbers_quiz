@@ -3,3 +3,7 @@ run:
 
 lock:
 	uv export --no-hashes --format requirements-txt > requirements.txt
+
+clean:
+	uvx isort .
+	uvx ruff format .
