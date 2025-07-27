@@ -51,7 +51,7 @@ async def read_root(request: Request):
 @app.post("/", response_class=HTMLResponse)
 async def submit_answer(
     request: Request,
-    user_answer: int = Form(...),  # Get user's answer from the form
+    user_answer: float = Form(...),  # Get user's answer from the form
     correct_number: int = Form(...),  # Get the hidden correct number from the form
 ):
     """
