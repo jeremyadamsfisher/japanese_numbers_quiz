@@ -43,3 +43,5 @@ typing-inspection==0.4.1
     # via pydantic
 uvicorn==0.35.0
     # via number-quiz
+wanakana-python==1.2.2
+    # via number-quiz
