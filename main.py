@@ -40,34 +40,77 @@ def guess_the_kanji():
 
 @game
 def counters_game():
-    objects = (
-        "apple",
-        "orange",
-        "book",
-        "pen",
-        "egg",
-        "ball",
-        "cake",
-        "coin",
-        "cup",
-        "stone",
+    """
+    Generates a Japanese counter quiz question.
+
+    This function randomly selects an object and its appropriate Japanese counter,
+    then generates a question asking for the correct counter word for a given number
+    of that object. The function currently supports the following counters:
+
+    - "つ" (tsu): Native Japanese counter for general objects (1-10), e.g., apples, oranges, eggs, cakes.
+      # Used for counting general, often round or unclassified objects.
+    - "冊" (satsu): Counter for books.
+      # Used specifically for counting bound volumes such as books and notebooks.
+    - "個" (ko): Counter for small, discrete objects, e.g., pens, cups, coins, stones, balls.
+      # Used for counting small, compact, or round objects.
+
+    Example:
+        question, (kana, romaji) = counters_game()
+        # question: 'What is the counter word for "3 apples" (using the つ counter)?'
+        # kana: 'みっつ'
+        # romaji: 'mittsu'
+    """
+    # Define objects and their appropriate counters
+    counter_data = [
+        {
+            "objects": ["apple", "orange", "egg", "cake"],
+            "counter": "つ",  # native Japanese counter for general objects (1-10)
+            "words": [
+                "ひとつ", "ふたつ", "みっつ", "よっつ", "いつつ",
+                "むっつ", "ななつ", "やっつ", "ここのつ", "とお"
+            ],
+            "range": range(1, 11)
+        },
+        {
+            "objects": ["book"],
+            "counter": "冊",
+            "words": [
+                "いっさつ", "にさつ", "さんさつ", "よんさつ", "ごさつ",
+                "ろくさつ", "ななさつ", "はっさつ", "きゅうさつ", "じゅっさつ"
+            ],
+            "range": range(1, 11)
+        },
+        {
+            "objects": ["pen", "cup", "coin", "stone", "ball"],
+            "counter": "個",
+            "words": [
+                "いっこ", "にこ", "さんこ", "よんこ", "ごこ",
+                "ろっこ", "ななこ", "はっこ", "きゅうこ", "じゅっこ"
+            ],
+            "range": range(1, 11)
+        },
+        {
+            "objects": ["person"],
+            "counter": "人",
+            "words": [
+                "ひとり", "ふたり", "さんにん", "よにん", "ごにん",
+                "ろくにん", "ななにん", "はちにん", "きゅうにん", "じゅうにん"
+            ],
+            "range": range(1, 11)
+        }
+    ]
+
+    # Randomly select a counter type
+    counter_type = random.choice(counter_data)
+    obj_en = random.choice(counter_type["objects"])
+    number = random.choice(counter_type["range"])
+    counter_word = counter_type["words"][number - 1]
+    counter_label = counter_type["counter"]
+
+    # Compose the question
+    question = (
+        f'What is the counter word for "{number} {obj_en}(s)"?'
     )
-    counters = (
-        "ひとつ",
-        "ふたつ",
-        "みっつ",
-        "よっつ",
-        "いつつ",
-        "むっつ",
-        "ななつ",
-        "やっつ",
-        "ここのつ",
-        "とお",
-    )
-    number = random.randint(1, 10)
-    counter_word = counters[number - 1]
-    obj_en = random.choice(objects)
-    question = f'What is the counter word for "{number} {obj_en}(s)"?'
     return question, (counter_word, wanakana.to_romaji(counter_word))
 
 
