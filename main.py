@@ -1,35 +1,85 @@
 import random
 
+import wanakana
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from kanjize import number2kanji
+
+import convert
 
 app = FastAPI()
-
-static_dir = "static"
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
 template_dir = "templates"
 templates = Jinja2Templates(directory=template_dir)
+games = []
 
 
-def generate_quiz_data():
-    """Generates a random number and its Japanese equivalent."""
+def game(func):
+    games.append(func)
+    return func
+
+
+@game
+def guess_the_kanji():
     random_number = random.randint(1, 100000)
-    japanese_number = number2kanji(random_number)
-    return random_number, japanese_number
+
+    def _nicely_formatted_number(number: int) -> str:
+        kanji = convert.Convert(number, "kanji")
+        hiragana = convert.Convert(number, "hiragana")
+        return f"{kanji} ({hiragana})"
+
+    # randomly drop some digits
+    idx_digits = list(enumerate(str(random_number)))
+    random.shuffle(idx_digits)
+    idx_digits = idx_digits[: random.randint(1, len(idx_digits) - 1)]
+    digits = [c for (_, c) in sorted(idx_digits, key=lambda x: x[0])]
+    random_number = int("".join(digits))
+
+    japanese_number = _nicely_formatted_number(random_number)
+    return f"What is {japanese_number} in Arabic numerals?", (random_number,)
+
+
+@game
+def counters_game():
+    objects = (
+        "apple",
+        "orange",
+        "book",
+        "pen",
+        "egg",
+        "ball",
+        "cake",
+        "coin",
+        "cup",
+        "stone",
+    )
+    counters = (
+        "ひとつ",
+        "ふたつ",
+        "みっつ",
+        "よっつ",
+        "いつつ",
+        "むっつ",
+        "ななつ",
+        "やっつ",
+        "ここのつ",
+        "とお",
+    )
+    number = random.randint(1, 10)
+    counter_word = counters[number - 1]
+    obj_en = random.choice(objects)
+    question = f'What is the counter word for "{number} {obj_en}(s)"?'
+    return question, (counter_word, wanakana.to_romaji(counter_word))
 
 
 def render(request, **kwargs):
-    question_number, japanese_question = generate_quiz_data()
+    selected_game = random.choice(games)
+    question, acceptable_answers = selected_game()
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "japanese_question": japanese_question,
-            "question_number": question_number,
+            "question": question,
+            "answer": ";".join([str(s) for s in acceptable_answers]),
             **kwargs,
         },
     )
@@ -51,20 +101,25 @@ async def read_root(request: Request):
 @app.post("/", response_class=HTMLResponse)
 async def submit_answer(
     request: Request,
-    user_answer: float = Form(...),  # Get user's answer from the form
-    correct_number: int = Form(...),  # Get the hidden correct number from the form
+    user_answer: str = Form(...),
+    correct_answer: str = Form(...),
 ):
     """
     Handles the submission of the user's answer, checks it,
     and then serves a new question with feedback.
     """
 
-    if user_answer == correct_number:
+    correct_answer = correct_answer.split(";")
+    if user_answer in correct_answer:
         feedback_message = "🎉 Correct! Well done!"
-        feedback_class = "text-success"
+        feedback_class = "success"
     else:
-        feedback_message = f"❌ Incorrect. The correct answer was {correct_number}."
-        feedback_class = "text-error"
+        if len(correct_answer) > 1:
+            correct_answer = " or ".join(correct_answer)
+        else:
+            correct_answer = correct_answer[0]
+        feedback_message = f"❌ Incorrect. The correct answer was {correct_answer}."
+        feedback_class = "warning"
 
     return render(
         request,

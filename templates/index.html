@@ -1,44 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Japanese Number Quiz</title>
-    <!-- Daisy UI and Tailwind CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex justify-center items-center min-h-screen bg-base-300 font-sans">
-    <div class="card w-full max-w-lg bg-base-100 shadow-xl rounded-box p-8 m-4">
-        <div class="card-body items-center text-center">
-            <h2 class="card-title text-3xl font-bold mb-6 text-primary">Japanese Number Quiz</h2>
-
-            <p class="text-xl mb-4">What is this number?</p>
-            <div class="text-5xl font-extrabold text-secondary mb-8" id="japaneseNumber">
-                {{ japanese_question }} <!-- Display the Japanese number from the backend context -->
-            </div>
-
-            <!-- Form for submitting the answer -->
-            <form action="/" method="post" class="w-full max-w-xs flex flex-col items-center">
-                <input type="text" name="user_answer" placeholder="Enter your answer (e.g., 123)" class="input input-bordered input-lg w-full mb-4 text-center text-xl" required autofocus />
-                <!-- Hidden input to send the correct answer back to the server -->
-                <input type="hidden" name="correct_number" value="{{ question_number }}">
-
-                <!-- Display feedback message if available from the backend -->
-                {% if feedback_message %}
-                    <div class="text-lg font-semibold mb-4 {{ feedback_class }}">
-                        {{ feedback_message }}
-                    </div>
-                {% endif %}
-
-                <button type="submit" class="btn btn-primary btn-lg w-full transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg">Check Answer</button>
-            </form>
-
-            <!-- Form for getting a new question (simply navigates to the root GET endpoint) -->
-            <form action="/" method="get" class="w-full max-w-xs mt-4">
-                <button type="submit" class="btn btn-secondary btn-lg w-full transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-lg">New Question</button>
-            </form>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body
+    class="flex justify-center items-center min-h-screen bg-base-300 font-sans"
+  >
+    <div class="card bg-base-100 w-96 shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title text-3xl font-bold text-primary">
+          Japanese Number Quiz
+        </h2>
+        <!-- Display feedback message if available from the backend -->
+        {% if feedback_message %}
+        <div
+          role="alert"
+          class="alert alert-{{ feedback_class }} alert-soft my-3"
+        >
+          <span>{{ feedback_message }}</span>
         </div>
+        {% endif %}
+
+        <div class="font-bold text-lg mb-8" id="japaneseNumber">
+          {{ question }}
+        </div>
+        <form
+          action="/"
+          method="post"
+          class="w-full max-w-xs flex flex-col items-center"
+        >
+          <input
+            type="text"
+            name="user_answer"
+            placeholder="Enter your answer (e.g., 123)"
+            class="input mb-2"
+            required
+            autofocus
+          />
+          <input type="hidden" name="correct_answer" value="{{ answer }}" />
+          <div class="w-full flex gap-2 justify-center">
+            <button class="btn btn-primary">Check Answer</button>
+            <a href="/" class="btn btn-neutral">New Question</a>
+          </div>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
 </html>
