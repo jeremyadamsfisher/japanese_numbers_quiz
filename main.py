@@ -53,14 +53,7 @@ def counters_game():
       # Used specifically for counting bound volumes such as books and notebooks.
     - "個" (ko): Counter for small, discrete objects, e.g., pens, cups, coins, stones, balls.
       # Used for counting small, compact, or round objects.
-
-    Example:
-        question, (kana, romaji) = counters_game()
-        # question: 'What is the counter word for "3 apples" (using the つ counter)?'
-        # kana: 'みっつ'
-        # romaji: 'mittsu'
     """
-    # Define objects and their appropriate counters
     counter_data = [
         {
             "objects": ["apple", "orange", "egg", "cake"],
@@ -68,15 +61,6 @@ def counters_game():
             "words": [
                 "ひとつ", "ふたつ", "みっつ", "よっつ", "いつつ",
                 "むっつ", "ななつ", "やっつ", "ここのつ", "とお"
-            ],
-            "range": range(1, 11)
-        },
-        {
-            "objects": ["book"],
-            "counter": "冊",
-            "words": [
-                "いっさつ", "にさつ", "さんさつ", "よんさつ", "ごさつ",
-                "ろくさつ", "ななさつ", "はっさつ", "きゅうさつ", "じゅっさつ"
             ],
             "range": range(1, 11)
         },
@@ -105,7 +89,6 @@ def counters_game():
     obj_en = random.choice(counter_type["objects"])
     number = random.choice(counter_type["range"])
     counter_word = counter_type["words"][number - 1]
-    counter_label = counter_type["counter"]
 
     # Compose the question
     question = (
@@ -153,7 +136,7 @@ async def submit_answer(
     """
 
     correct_answer = correct_answer.split(";")
-    if user_answer in correct_answer:
+    if user_answer.lower() in correct_answer:
         feedback_message = "🎉 Correct! Well done!"
         feedback_class = "success"
     else:
