@@ -20,19 +20,17 @@ def game(func):
 
 @game
 def guess_the_kanji():
-    random_number = random.randint(1, 100000)
 
     def _nicely_formatted_number(number: int) -> str:
         kanji = convert.Convert(number, "kanji")
         hiragana = convert.Convert(number, "hiragana")
         return f"{kanji} ({hiragana})"
 
-    # randomly drop some digits
-    idx_digits = list(enumerate(str(random_number)))
-    random.shuffle(idx_digits)
-    idx_digits = idx_digits[: random.randint(1, len(idx_digits) - 1)]
-    digits = [c for (_, c) in sorted(idx_digits, key=lambda x: x[0])]
-    random_number = int("".join(digits))
+
+    number = 0
+    for i in range(random.randint(1, 6)):
+        digit = random.randint(0 if i > 1 else 1, 9)
+        number += digit * 10**i
 
     japanese_number = _nicely_formatted_number(random_number)
     return f"What is {japanese_number} in Arabic numerals?", (random_number,)
