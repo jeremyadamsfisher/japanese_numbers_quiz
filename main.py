@@ -136,7 +136,7 @@ def time_game():
     question = f'How do you say "{hour}:{minute:02d}" in Japanese?'
     return question, (jp_time, wanakana.to_romaji(jp_time))
 
-@game
+# @game
 def building_level_game():
     """
     Generates a Japanese building level quiz question.
@@ -208,6 +208,52 @@ def building_level_game():
 
         question = f'How do you say "{en_level}" in Japanese?'
         return question, (jp_level, wanakana.to_romaji(jp_level))
+
+@game
+def days_of_month_game():
+    """
+    Generates a Japanese days-of-the-month quiz question.
+
+    Randomly selects a day (1-31) and asks for its Japanese reading.
+    Accepts both hiragana and romaji as correct answers.
+    """
+    days = [
+        ("ついたち", "1st"),
+        ("ふつか", "2nd"),
+        ("みっか", "3rd"),
+        ("よっか", "4th"),
+        ("いつか", "5th"),
+        ("むいか", "6th"),
+        ("なのか", "7th"),
+        ("ようか", "8th"),
+        ("ここのか", "9th"),
+        ("とおか", "10th"),
+        ("じゅういちにち", "11th"),
+        ("じゅうににち", "12th"),
+        ("じゅうさんにち", "13th"),
+        ("じゅうよっか", "14th"),
+        ("じゅうごにち", "15th"),
+        ("じゅうろくにち", "16th"),
+        ("じゅうしちにち", "17th"),
+        ("じゅうはちにち", "18th"),
+        ("じゅうくにち", "19th"),
+        ("はつか", "20th"),
+        ("にじゅういちにち", "21st"),
+        ("にじゅうににち", "22nd"),
+        ("にじゅうさんにち", "23rd"),
+        ("にじゅうよっか", "24th"),
+        ("にじゅうごにち", "25th"),
+        ("にじゅうろくにち", "26th"),
+        ("にじゅうしちにち", "27th"),
+        ("にじゅうはちにち", "28th"),
+        ("にじゅうくにち", "29th"),
+        ("さんじゅうにち", "30th"),
+        ("さんじゅういちにち", "31st"),
+    ]
+    idx = random.randint(0, 30)
+    jp, en = days[idx]
+    question = f'How do you say "{idx+1}th day of the month" in Japanese?'
+    return question, (jp, wanakana.to_romaji(jp))
 
 def render(request, **kwargs):
     selected_game = random.choice(games)
